@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Préstamo</title>
+</head>
+<body>
+    <h1>Nuevo Préstamo</h1>
+    <form th:action="@{/prestamos}" th:object="${prestamo}" method="post">
+        <div>
+            <label>Socio:</label>
+            <select th:field="*{socio}">
+                <option th:each="socio : ${socios}" th:value="${socio.socioId}" th:text="${socio.nombre + ' ' + socio.apellidos}"></option>
+            </select>
+        </div>
+        <div>
+            <label>Libro:</label>
+            <select th:field="*{libro}">
+                <option th:each="libro : ${libros}" th:value="${libro.libroId}" th:text="${libro.titulo}"></option>
+            </select>
+        </div>
+        <button type="submit">Guardar</button>
+    </form>
+</body>
+</html>
