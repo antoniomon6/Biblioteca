@@ -1,7 +1,8 @@
 package com.amalagonj.biblioteca.entidades;
 
-import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 
@@ -12,11 +13,14 @@ public class Libro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long libroId;
 
+    @NotBlank(message = "El título es obligatorio")
     private String titulo;
+
     private String autor;
     private String categoria;
 
     @Column(unique = true)
+    @NotBlank(message = "El ISBN es obligatorio")
     private String isbn;
 
     @OneToMany(mappedBy = "libro")

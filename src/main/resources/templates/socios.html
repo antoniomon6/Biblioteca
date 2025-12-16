@@ -46,7 +46,7 @@
                     <a th:href="@{/socios/editar/{id}(id=${socio.socioId})}"><button>Editar</button></a>
                     <form th:action="@{/socios/eliminar}" method="post" style="display:inline;">
                         <input type="hidden" name="id" th:value="${socio.socioId}" />
-                        <button type="submit" onclick="return confirm('¿Estás seguro?');">Eliminar</button>
+                        <button type="submit">Eliminar</button>
                     </form>
                 </td>
             </tr>

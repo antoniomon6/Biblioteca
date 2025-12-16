@@ -2,9 +2,11 @@ package com.amalagonj.biblioteca.controllers;
 
 import com.amalagonj.biblioteca.entidades.Libro;
 import com.amalagonj.biblioteca.services.LibroService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,7 +43,10 @@ public class LibroController {
     }
 
     @PostMapping("/guardar")
-    public String guardarLibro(@ModelAttribute Libro libro) {
+    public String guardarLibro(@Valid @ModelAttribute("libro") Libro libro, BindingResult result) {
+        if (result.hasErrors()) {
+            return "form-libro";
+        }
         libroService.save(libro);
         return "redirect:/libros";
     }

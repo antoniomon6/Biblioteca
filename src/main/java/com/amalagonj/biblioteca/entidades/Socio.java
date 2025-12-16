@@ -2,7 +2,9 @@ package com.amalagonj.biblioteca.entidades;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,10 +17,15 @@ public class Socio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long socioId;
 
+    @NotBlank(message = "El nombre es obligatorio")
+    @Size(min = 2, message = "El nombre debe tener al menos 2 caracteres")
     private String nombre;
+
     private String apellidos;
 
     @Column(unique = true)
+    @NotBlank(message = "El email es obligatorio")
+    @Email(message = "Debe ser una dirección de correo válida")
     private String email;
 
     private LocalDate fechaNacimiento;

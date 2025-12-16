@@ -2,9 +2,11 @@ package com.amalagonj.biblioteca.controllers;
 
 import com.amalagonj.biblioteca.entidades.Socio;
 import com.amalagonj.biblioteca.services.SocioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,7 +43,10 @@ public class SocioController {
     }
 
     @PostMapping("/guardar")
-    public String guardarSocio(@ModelAttribute Socio socio) {
+    public String guardarSocio(@Valid @ModelAttribute("socio") Socio socio, BindingResult result) {
+        if (result.hasErrors()) {
+            return "form-socio";
+        }
         socioService.save(socio);
         return "redirect:/socios";
     }
