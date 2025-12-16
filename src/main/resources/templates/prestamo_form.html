@@ -5,8 +5,15 @@
     <title>Nuevo Préstamo</title>
 </head>
 <body>
+    <nav>
+        <a href="/prestamos">Préstamos</a> |
+        <a href="/libros">Libros</a> |
+        <a href="/socios">Socios</a>
+    </nav>
     <h1>Nuevo Préstamo</h1>
+    
     <div th:if="${error}" th:text="${error}" style="color: red;"></div>
+    
     <form th:action="@{/prestamos}" th:object="${prestamo}" method="post">
         <div>
             <label>Socio:</label>
@@ -20,7 +27,9 @@
                 <option th:each="libro : ${libros}" th:value="${libro.libroId}" th:text="${libro.titulo}"></option>
             </select>
         </div>
+        <br>
         <button type="submit">Guardar</button>
+        <a href="/prestamos">Cancelar</a>
     </form>
 </body>
 </html>

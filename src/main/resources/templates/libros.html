@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Libros</title>
+</head>
+<body>
+    <nav>
+        <a href="/prestamos">Préstamos</a> |
+        <a href="/libros">Libros</a> |
+        <a href="/socios">Socios</a>
+    </nav>
+    <h1>Gestión de Libros</h1>
+
+    <form th:action="@{/libros}" method="get">
+        <input type="text" name="keyword" placeholder="Buscar por título..." th:value="${param.keyword}">
+        <button type="submit">Buscar</button>
+        <a href="/libros">Limpiar</a>
+    </form>
+    <br>
+    <a href="/libros/nuevo">Nuevo Libro</a>
+    <br><br>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Autor</th>
+                <th>Categoría</th>
+                <th>ISBN</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="libro : ${libros}">
+                <td th:text="${libro.libroId}"></td>
+                <td th:text="${libro.titulo}"></td>
+                <td th:text="${libro.autor}"></td>
+                <td th:text="${libro.categoria}"></td>
+                <td th:text="${libro.isbn}"></td>
+                <td>
+                    <a th:href="@{/libros/editar/{id}(id=${libro.libroId})}"><button>Editar</button></a>
+                    <form th:action="@{/libros/eliminar}" method="post" style="display:inline;">
+                        <input type="hidden" name="id" th:value="${libro.libroId}" />
+                        <button type="submit" onclick="return confirm('¿Estás seguro?');">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

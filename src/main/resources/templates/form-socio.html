@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de Socio</title>
+</head>
+<body>
+    <nav>
+        <a href="/prestamos">Préstamos</a> |
+        <a href="/libros">Libros</a> |
+        <a href="/socios">Socios</a>
+    </nav>
+    <h1 th:text="${socio.socioId == null ? 'Nuevo Socio' : 'Editar Socio'}">Formulario de Socio</h1>
+
+    <form th:action="@{/socios/guardar}" th:object="${socio}" method="post">
+        <input type="hidden" th:field="*{socioId}" />
+        
+        <div>
+            <label>Nombre:</label>
+            <input type="text" th:field="*{nombre}" required />
+        </div>
+        <div>
+            <label>Apellidos:</label>
+            <input type="text" th:field="*{apellidos}" required />
+        </div>
+        <div>
+            <label>Email:</label>
+            <input type="email" th:field="*{email}" required />
+        </div>
+        <div>
+            <label>Fecha de Nacimiento:</label>
+            <input type="date" id="fechaNacimiento" name="fechaNacimiento" 
+                   th:value="${socio.fechaNacimiento != null ? #temporals.format(socio.fechaNacimiento, 'yyyy-MM-dd') : ''}" required />
+        </div>
+        
+        <!-- Campos de estado y penalización (solo lectura o gestionados por el sistema) -->
+        <div th:if="${socio.socioId != null}">
+            <div>
+                <label>Estado:</label>
+                <input type="text" th:field="*{estado}" readonly />
+            </div>
+            <div>
+                <label>Fecha Fin Penalización:</label>
+                <input type="date" id="fechaFinPenalizacion" name="fechaFinPenalizacion" 
+                       th:value="${socio.fechaFinPenalizacion != null ? #temporals.format(socio.fechaFinPenalizacion, 'yyyy-MM-dd') : ''}" readonly />
+            </div>
+        </div>
+        
+        <br>
+        <button type="submit">Guardar</button>
+        <a href="/socios">Cancelar</a>
+    </form>
+</body>
+</html>
