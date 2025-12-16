@@ -1,10 +1,13 @@
 package com.amalagonj.biblioteca.services;
 
+import com.amalagonj.biblioteca.entidades.Libro;
 import com.amalagonj.biblioteca.entidades.Prestamo;
 import com.amalagonj.biblioteca.entidades.Socio;
 import com.amalagonj.biblioteca.excepciones.ReglaNegocioException;
+import com.amalagonj.biblioteca.repositories.LibroRepository;
 import com.amalagonj.biblioteca.repositories.PrestamoRepository;
 import com.amalagonj.biblioteca.repositories.SocioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PrestamoServiceImpl implements PrestamoService {
@@ -22,6 +26,9 @@ public class PrestamoServiceImpl implements PrestamoService {
     @Autowired
     private SocioRepository socioRepository;
 
+    @Autowired
+    private LibroRepository libroRepository;
+
     @Override
     public List<Prestamo> listarTodosLosPrestamos() {
         return prestamoRepository.findAll();
@@ -29,13 +36,21 @@ public class PrestamoServiceImpl implements PrestamoService {
 
     @Override
     public Prestamo guardarPrestamo(Prestamo prestamo) {
+        // Cargar entidades completas desde la base de datos
+        Socio socio = socioRepository.findById(prestamo.getSocio().getSocioId())
+                .orElseThrow(() -> new EntityNotFoundException("Socio no encontrado con ID: " + prestamo.getSocio().getSocioId()));
+        Libro libro = libroRepository.findById(prestamo.getLibro().getLibroId())
+                .orElseThrow(() -> new EntityNotFoundException("Libro no encontrado con ID: " + prestamo.getLibro().getLibroId()));
+
+        prestamo.setSocio(socio);
+        prestamo.setLibro(libro);
+
         // Validación 1: Socio sancionado
         if (prestamo.getSocio().getEstado() == Socio.EstadoSocio.SANCIONADO) {
             if (prestamo.getSocio().getFechaFinPenalizacion() != null && prestamo.getSocio().getFechaFinPenalizacion().isAfter(LocalDate.now())) {
                 throw new ReglaNegocioException("El socio está sancionado y no puede realizar préstamos.");
             } else {
                 // Si la fecha de penalización ha pasado, se quita la sanción
-                Socio socio = prestamo.getSocio();
                 socio.setEstado(Socio.EstadoSocio.ACTIVO);
                 socio.setFechaFinPenalizacion(null);
                 socioRepository.save(socio);
@@ -58,7 +73,7 @@ public class PrestamoServiceImpl implements PrestamoService {
     @Override
     public void devolverPrestamo(Long prestamoId) {
         Prestamo prestamo = prestamoRepository.findById(prestamoId)
-                .orElseThrow(() -> new ReglaNegocioException("No se encontró el préstamo."));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró el préstamo."));
 
         prestamo.setFechaDevolucion(LocalDateTime.now());
 
@@ -80,5 +95,10 @@ public class PrestamoServiceImpl implements PrestamoService {
     @Override
     public void borrarPrestamo(Long id) {
         prestamoRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Prestamo> findById(Long id) {
+        return prestamoRepository.findById(id);
     }
 }
