@@ -6,6 +6,7 @@
 </head>
 <body>
     <h1>Nuevo Préstamo</h1>
+    <div th:if="${error}" th:text="${error}" style="color: red;"></div>
     <form th:action="@{/prestamos}" th:object="${prestamo}" method="post">
         <div>
             <label>Socio:</label>

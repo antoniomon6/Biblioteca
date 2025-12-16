@@ -15,6 +15,7 @@
                 <th>Libro</th>
                 <th>Fecha Préstamo</th>
                 <th>Fecha Límite</th>
+                <th>Fecha Devolución</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -25,10 +26,15 @@
                 <td th:text="${prestamo.libro.titulo}"></td>
                 <td th:text="${#temporals.format(prestamo.fechaPrestamo, 'dd-MM-yyyy HH:mm')}"></td>
                 <td th:text="${#temporals.format(prestamo.fechaLimite, 'dd-MM-yyyy HH:mm')}"></td>
+                <td th:text="${prestamo.fechaDevolucion != null ? #temporals.format(prestamo.fechaDevolucion, 'dd-MM-yyyy HH:mm') : ''}"></td>
                 <td>
-                    <form th:action="@{/prestamos/borrar}" method="post">
+                    <form th:action="@{/prestamos/borrar}" method="post" style="display:inline;">
                         <input type="hidden" name="id" th:value="${prestamo.prestamoId}" />
                         <button type="submit">Borrar</button>
+                    </form>
+                    <form th:if="${prestamo.fechaDevolucion == null}" th:action="@{/prestamos/devolver}" method="post" style="display:inline;">
+                        <input type="hidden" name="id" th:value="${prestamo.prestamoId}" />
+                        <button type="submit">Devolver</button>
                     </form>
                 </td>
             </tr>
