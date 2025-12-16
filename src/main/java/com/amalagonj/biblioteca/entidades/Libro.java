@@ -1,7 +1,7 @@
 package com.amalagonj.biblioteca.entidades;
 
 import jakarta.persistence.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 
@@ -20,6 +20,7 @@ public class Libro {
     private String isbn;
 
     @OneToMany(mappedBy = "libro")
+    @JsonIgnore
     private List<Prestamo> prestamos;
 
     public Long getLibroId() {

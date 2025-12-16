@@ -1,10 +1,14 @@
 package com.amalagonj.biblioteca.entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+
 public class Socio {
 
     @Id
@@ -26,6 +30,7 @@ public class Socio {
     private LocalDate fechaFinPenalizacion;
 
     @OneToMany(mappedBy = "socio")
+    @JsonIgnore
     private List<Prestamo> prestamos;
 
     public enum EstadoSocio {
